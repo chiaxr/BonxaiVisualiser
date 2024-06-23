@@ -1,0 +1,9 @@
+[submodule "third_party/Bonxai"]
+	path = third_party/Bonxai
+	url = https://github.com/facontidavide/Bonxai.git
+[submodule "third_party/raylib"]
+	path = third_party/raylib
+	url = https://github.com/raysan5/raylib.git
+[submodule "third_party/raygui"]
+	path = third_party/raygui
+	url = https://github.com/raysan5/raygui.git
