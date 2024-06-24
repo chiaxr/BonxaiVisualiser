@@ -40,7 +40,7 @@ int main()
     }
 
     // Start visualiser
-    Bonxai::BonxaiVisualiser vis(grid, getColor);
+    Bonxai::BonxaiVisualiser<bool> vis(grid, getColor);
     vis.start();
 
     // Update grid, randomly setting cells

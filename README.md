@@ -25,7 +25,7 @@ constexpr double voxelRes = 1.0;
 Bonxai::VoxelGrid<bool> grid(voxelRes);
 
 // Init visualiser
-Bonxai::BonxaiVisualiser vis(grid, getColor);
+Bonxai::BonxaiVisualiser<bool> vis(grid, getColor);
 
 // Opens visualiser window and begins rendering contents of grid
 vis.start();

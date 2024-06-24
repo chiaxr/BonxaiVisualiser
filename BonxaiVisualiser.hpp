@@ -14,13 +14,13 @@
 
 namespace Bonxai
 {
-template <typename DataT, typename ColoringFunc>
+template <typename DataT>
 class BonxaiVisualiser
 {
 public:
     BonxaiVisualiser(
         const VoxelGrid<DataT>& grid,
-        ColoringFunc func)
+        std::function<std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>(const DataT&)> func)
         : mGrid(grid), mGetColor(func)
     {}
 
@@ -43,18 +43,18 @@ private:
     std::atomic_bool mRunning;
     std::future<void> mVisThread;
     const VoxelGrid<DataT>& mGrid;
-    ColoringFunc mGetColor;
+    std::function<std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>(const DataT&)> mGetColor;
 };
 
-template <typename DataT, typename ColoringFunc>
-void BonxaiVisualiser<DataT,ColoringFunc>::start()
+template <typename DataT>
+void BonxaiVisualiser<DataT>::start()
 {
     mRunning = true;
     mVisThread = std::async(std::launch::async, &BonxaiVisualiser::run, this);
 }
 
-template <typename DataT, typename ColoringFunc>
-void BonxaiVisualiser<DataT,ColoringFunc>::run()
+template <typename DataT>
+void BonxaiVisualiser<DataT>::run()
 {
     // Init
     constexpr int screenWidth = 1280;
@@ -105,8 +105,8 @@ void BonxaiVisualiser<DataT,ColoringFunc>::run()
     CloseWindow(); // Close window and OpenGL context
 }
 
-template <typename DataT, typename ColoringFunc>
-void BonxaiVisualiser<DataT,ColoringFunc>::renderGrid()
+template <typename DataT>
+void BonxaiVisualiser<DataT>::renderGrid()
 {
     // Adapted from Bonxai - VoxelGrid<DataT>::forEachCell(VisitorFunction func)
     const int32_t MASK_LEAF = ((1 << mGrid.LEAF_BITS) - 1);
@@ -146,8 +146,8 @@ void BonxaiVisualiser<DataT,ColoringFunc>::renderGrid()
     }
 }
 
-template <typename DataT, typename ColoringFunc>
-void BonxaiVisualiser<DataT,ColoringFunc>::renderCell(const DataT& data, const Point3D& pos)
+template <typename DataT>
+void BonxaiVisualiser<DataT>::renderCell(const DataT& data, const Point3D& pos)
 {
     auto color = mGetColor(data);
     DrawCube(
@@ -159,14 +159,14 @@ void BonxaiVisualiser<DataT,ColoringFunc>::renderCell(const DataT& data, const P
     );
 }
 
-template <typename DataT, typename ColoringFunc>
-Vector3 BonxaiVisualiser<DataT,ColoringFunc>::toVisFrame(const float x, const float y, const float z)
+template <typename DataT>
+Vector3 BonxaiVisualiser<DataT>::toVisFrame(const float x, const float y, const float z)
 {
     return {x, z, -y};
 }
 
-template <typename DataT, typename ColoringFunc>
-void BonxaiVisualiser<DataT,ColoringFunc>::drawAxes()
+template <typename DataT>
+void BonxaiVisualiser<DataT>::drawAxes()
 {
     // x-axis
     {
@@ -191,8 +191,8 @@ void BonxaiVisualiser<DataT,ColoringFunc>::drawAxes()
     drawArrow(BLUE);
 }
 
-template <typename DataT, typename ColoringFunc>
-void BonxaiVisualiser<DataT,ColoringFunc>::drawArrow(const Color& color)
+template <typename DataT>
+void BonxaiVisualiser<DataT>::drawArrow(const Color& color)
 {
     constexpr float axesRadius = 0.07f;
     constexpr float axesLength = 1.0f;
